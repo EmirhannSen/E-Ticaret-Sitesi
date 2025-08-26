@@ -1,0 +1,37 @@
+RewriteEngine on
+
+#url bulunamadıysa 404 sayfasına yönlendiriyoruz
+ErrorDocument 404  http://localhost/eticaret4/teknolojishop/404.php
+
+#Bunlar site kurulduğu zaman aktif edilir bu şekilde yönlendirme sağlanır.
+#RewriteCond %{SERVER_PORT} 80
+#RewriteRule ^(.*)$ http://www.site_adi.com/$1 [R,L]
+
+#RewriteCond %{HTTP_HOST} ^site_adi.com. [NC]
+#RewriteRule ^(.*)$ http://www.site_adi.com/$1 [L,R=301,NC]
+
+
+#Seo url oluşturma
+#RewriteRule ^test-url$ test.php [L]
+
+#Seo için belli bir kural tanımlanmamışsa yönlendirilen php dosyasını direkt açar.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php
+
+
+
+#url için kural tanımlıyoruz burada urun- değeri url nin baslık değeridir url urun- şeklinde başlıyorsa buradaki kod calısır.
+#1- Bu kısımda ([0-9a-zA-Z-_]+) bu alanda 0-9 arasındaki rakamlar ve a-Z harfleri alınır.
+#2- Bu kısım varsa örneğin "([0-9]+)$" buradada örneğin id değerleri alınabilir burada biz 0-9 arasında oluşsan rakamları aldık.
+#3- Bu kısım ise url nin çalışacağı php adresini veriyoruz  urun-detay.php
+#4- "?sef=$1" burada tanımlanmış olan işlemde urun- den sonra gelen ikinci - ye kadar devam eden değerleri alıp sef değişkenine atar.
+#5- "&urun_id=$2" burada url nin sonuncaki rakamları alıp urun_id değişkenine atar.
+RewriteRule ^urun-([0-9a-zA-Z-_]+)-([0-9]+)$  urun-detay.php?sef=$1&urun_id=$2 [L,QSA]
+RewriteRule ^kategori-([0-9a-zA-Z-_]+)-([0-9]+)$  urun_listeleme.php?sef=$1&kategori_id=$2 [L,QSA]
+
+#content işlemi için id değerine ihtiyacımız yok bu nedenle content- değerinden sonra sadece 0-9 arasındaki rakamlar ve a-Z harfleri alınır.
+#alınan bu değerler content değişkenine aktarılır ve content.php dosyası çalıştırılır.
+RewriteRule ^content-([0-9a-zA-Z-_]+)  content.php?content=$1 [L,QSA]
+
+#RewriteRule ^uye-kayit$ uye-kayit.php [NC,L]
